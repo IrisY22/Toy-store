@@ -3,7 +3,7 @@ import { getToys, removeToy } from '../services/toyServices'
 
 
 
-export default function ToysList({ setSelectedToy, handleOpenModal }) {
+export default function ToysList({ setSelectedToy, handleOpenModal, user, isAdmin }) {
   const [toys, setToys] = useState([])
 
 
@@ -51,7 +51,10 @@ export default function ToysList({ setSelectedToy, handleOpenModal }) {
             <div className='grid justify-items-center'>
               <h2 className='text-2xl font-bold text-blue-700'>{toy.title}</h2>
               <p className='font-bold text-blue-700'>${toy.price}</p>
-              <div className='flex gap-2 mt-2'>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                <i className="fa-solid fa-cart-shopping"></i></button>
+              {user && isAdmin && <div className='flex gap-2 mt-2'>
                 <button
                   onClick={() => onEditToy(toy._id)}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
@@ -63,6 +66,7 @@ export default function ToysList({ setSelectedToy, handleOpenModal }) {
                   <i className="fa-solid fa-trash"></i>
                 </button>
               </div>
+              }
             </div>
           </li>
         ))

@@ -11,16 +11,20 @@ import { create, update } from './services/toyServices';
 
 function App() {
   const [openModal, setOpenModal] = useState(false)
+  const [openLogin, setOpenLogin] = useState(false)
   const [selectedToy, setSelectedToy] = useState(null)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isLogin, setIsLogin] = useState('Login')
+
+  const user = localStorage.getItem('user')
 
   useEffect(() => {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      const user = JSON.parse(userString);
-      setIsAdmin(user.isAdmin)
+    if (user) {
+      const userConnected = JSON.parse(user);
+      setIsAdmin(userConnected.isAdmin)
+      setIsLogin('Logout')
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (!openModal) {
@@ -51,19 +55,39 @@ function App() {
     }
   }
 
+  // function handleOpenLoginModal() {
+  //   setOpenLogin(true)
+  // }
+
+  function handleOpenLoginModal() {
+    if (user) {
+      setIsLogin('Login')
+      localStorage.clear();
+    } else {
+      setOpenLogin(true)
+    }
+  }
+
+  function handleCloseModal() {
+    setOpenLogin(false)
+  }
 
 
   return (
     <>
-      <  Login />
       <div className='flex justify-end m-8'>
-
-        {isAdmin && <button
-          onClick={handleOpenModal}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add New Toy
-        </button>
-        }
+        <button onClick={() => handleOpenLoginModal()}>{isLogin}</button>
+        {openLogin && <Login onClose={handleCloseModal} />}
+        <div>
+        </div>
+        <div className='flex justify-end m-8'>
+          {user && isAdmin && <button
+            onClick={handleOpenModal}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Add New Toy
+          </button>
+          }
+        </div>
 
       </div>
       <main>
@@ -71,7 +95,14 @@ function App() {
           ?
           <AddNewToy onAddNewToy={handleAddNewToy} toy={selectedToy} />
           :
-          <ToysList setSelectedToy={setSelectedToy} openModal={openModal} setOpenModal={setOpenModal} handleOpenModal={handleOpenModal} />}
+          <ToysList
+            setSelectedToy={setSelectedToy}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+            handleOpenModal={handleOpenModal}
+            isAdmin={isAdmin}
+            user={user}
+          />}
       </main>
     </>
   );
