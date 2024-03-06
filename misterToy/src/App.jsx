@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.css';
 
-import defaultImg from './assets/default-img.jpg'
 import ToysList from "./components/ToysList";
 import AddNewToy from './components/AddNewToy';
-import { create, update } from './services/httpServices';
+import Login from './components/Login';
+import { create, update } from './services/toyServices';
 
 
 
@@ -12,18 +12,21 @@ import { create, update } from './services/httpServices';
 function App() {
   const [openModal, setOpenModal] = useState(false)
   const [selectedToy, setSelectedToy] = useState(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      const user = JSON.parse(userString);
+      setIsAdmin(user.isAdmin)
+    }
+  }, [])
 
   useEffect(() => {
     if (!openModal) {
       setSelectedToy(null)
     }
   }, [openModal])
-
-  // const [newToy, setNewToy] = useState({
-  //   toyTitle: '',
-  //   toyPrice: 0,
-  //   img: defaultImg
-  // })
 
   function handleOpenModal() {
     setOpenModal((isOpen) => !isOpen)
@@ -46,21 +49,29 @@ function App() {
     } catch (err) {
       console.log(err);
     }
-
   }
+
 
 
   return (
     <>
+      <  Login />
       <div className='flex justify-end m-8'>
-        <button
+
+        {isAdmin && <button
           onClick={handleOpenModal}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Add New Toy
         </button>
+        }
+
       </div>
       <main>
-        {openModal ? <AddNewToy onAddNewToy={handleAddNewToy} toy={selectedToy} /> : <ToysList selectedToy={selectedToy} setSelectedToy={setSelectedToy} openModal={openModal} setOpenModal={setOpenModal} handleOpenModal={handleOpenModal} />}
+        {openModal
+          ?
+          <AddNewToy onAddNewToy={handleAddNewToy} toy={selectedToy} />
+          :
+          <ToysList setSelectedToy={setSelectedToy} openModal={openModal} setOpenModal={setOpenModal} handleOpenModal={handleOpenModal} />}
       </main>
     </>
   );

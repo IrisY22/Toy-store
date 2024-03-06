@@ -1,9 +1,9 @@
-import { get, remove, update } from '../services/httpServices'
 import { useEffect, useState } from 'react'
+import { getToys, removeToy } from '../services/toyServices'
 
 
 
-export default function ToysList({ selectedToy, setSelectedToy, handleOpenModal }) {
+export default function ToysList({ setSelectedToy, handleOpenModal }) {
   const [toys, setToys] = useState([])
 
 
@@ -13,7 +13,7 @@ export default function ToysList({ selectedToy, setSelectedToy, handleOpenModal 
 
   async function fetchToys() {
     try {
-      const toysData = await get();
+      const toysData = await getToys();
       setToys(toysData);
     } catch (err) {
       console.error('Failed to fetch toys:', error.message);
@@ -22,7 +22,7 @@ export default function ToysList({ selectedToy, setSelectedToy, handleOpenModal 
 
   async function onRemoveToy(id) {
     try {
-      await remove(id);
+      await removeToy(id);
       setToys((currToys) => {
         const updatedToys = currToys.filter((toy) => toy._id !== id)
         return updatedToys
@@ -50,7 +50,7 @@ export default function ToysList({ selectedToy, setSelectedToy, handleOpenModal 
             <img src={toy.image} alt={toy.title} className='h-40 rounded-xl mb-1 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:duration-300' />
             <div className='grid justify-items-center'>
               <h2 className='text-2xl font-bold text-blue-700'>{toy.title}</h2>
-              <p className='font-bold text-blue-700'>{toy.price}</p>
+              <p className='font-bold text-blue-700'>${toy.price}</p>
               <div className='flex gap-2 mt-2'>
                 <button
                   onClick={() => onEditToy(toy._id)}

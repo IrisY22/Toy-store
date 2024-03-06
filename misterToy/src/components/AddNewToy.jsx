@@ -2,9 +2,6 @@ import { useState } from "react"
 
 export default function AddNewToy({ onAddNewToy, toy }) {
 
-
-
-
   const [title, setTitle] = useState(toy ? toy.title : '')
   const [price, setPrice] = useState(toy ? toy.price : 0)
   const [image, setImage] = useState(toy ? toy.image : '')

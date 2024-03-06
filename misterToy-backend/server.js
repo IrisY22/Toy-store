@@ -1,13 +1,16 @@
 
 const express = require('express')
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose')
 const app = express()
 const Toy = require('./toy.js');
 const User = require('./user.js');
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.json());
 app.use(cors())
+app.use(cookieParser());
 
 
 
@@ -82,20 +85,42 @@ app.delete('/api/toys/:id', async (req, res) => {
   }
 })
 
-// app.post('/api/users', async (req, res) => {
-//   console.log(req.body);
-//   const user = new User({
-//     username: req.body.username,
-//     password: req.body.password
-//   });
+app.post('/api/users/login', async (req, res) => {
+  try {
+    const user = await User.findOne({
+      username: req.body.username
+    });
 
-//   try {
-//     const newUser = await user.save();
-//     res.status(201).json(newUser);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
+    if (!user) {
+      return res.status(404).json({ message: 'User does not exist' });
+    }
+    if (req.body.password === user.password) {
+      res.status(200).json(user);
+    } else {
+      return res.status(404).json({ message: 'Password does not match' });
+    }
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+app.post('/api/users', async (req, res) => {
+  console.log(req.body);
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password,
+    isAdmin: req.body.isAdmin
+  });
+
+  try {
+    const newUser = await user.save();
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 
 app.listen(3001, () => {

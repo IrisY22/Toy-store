@@ -8,36 +8,36 @@ const httpService = axios.create({
   },
 });
 
-export const get = async () => {
+export const get = async (url) => {
   try {
-    const response = await httpService.get('/api/toys');
+    const response = await httpService.get(url);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
 };
 
-export const create = async (toyData) => {
+export const post = async (url, data) => {
   try {
-    const response = await httpService.post('/api/toys', toyData);
+    const response = await httpService.post(url, data);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
 };
 
-export const update = async (toyId, toyData) => {
+export const put = async (url, data) => {
   try {
-    const response = await httpService.put(`/api/toys/${toyId}`, toyData);
+    const response = await httpService.put(url, data);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
   }
 };
 
-export const remove = async (toyId) => {
+export const remove = async (url) => {
   try {
-    const response = await httpService.delete(`/api/toys/${toyId}`);
+    const response = await httpService.delete(url);
     return response.data;
   } catch (error) {
     throw new Error(error.response.data.message);
