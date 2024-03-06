@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
     required: true
+  },
+  cart: {
+    type: Array
   }
 })
 

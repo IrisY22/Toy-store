@@ -7,6 +7,7 @@ const app = express()
 const Toy = require('./toy.js');
 const User = require('./user.js');
 const bodyParser = require('body-parser');
+const user = require('./user.js');
 
 app.use(bodyParser.json());
 app.use(cors())
@@ -123,9 +124,29 @@ app.post('/api/users', async (req, res) => {
 });
 
 
+app.put('/api/users/:id', async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    console.log(req.body.cart);
+    user.cart = req.body.cart
+    const updatedUser = await user.save()
+    res.status(200).json(updatedUser)
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+})
+
+
 app.listen(3001, () => {
   console.log('listening on port 3001')
 })
+
 
 
 

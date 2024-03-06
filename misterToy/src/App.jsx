@@ -15,8 +15,7 @@ function App() {
   const [selectedToy, setSelectedToy] = useState(null)
   const [isAdmin, setIsAdmin] = useState(false)
   const [isLogin, setIsLogin] = useState('Login')
-
-  const user = localStorage.getItem('user')
+  const [user, setUser] = useState(localStorage.getItem('user'))
 
   useEffect(() => {
     if (user) {
@@ -72,7 +71,6 @@ function App() {
     setOpenLogin(false)
   }
 
-
   return (
     <>
       <div className='flex justify-end m-8'>
@@ -81,6 +79,12 @@ function App() {
         <div>
         </div>
         <div className='flex justify-end m-8'>
+          {!isAdmin && <button
+            onClick={handleOpenModal}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <i className="fa-solid fa-cart-shopping"></i>
+          </button>
+          }
           {user && isAdmin && <button
             onClick={handleOpenModal}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -102,6 +106,7 @@ function App() {
             handleOpenModal={handleOpenModal}
             isAdmin={isAdmin}
             user={user}
+            setUser={setUser}
           />}
       </main>
     </>

@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react'
 import { getToys, removeToy } from '../services/toyServices'
+import { updateUser } from '../services/userServices'
 
 
 
-export default function ToysList({ setSelectedToy, handleOpenModal, user, isAdmin }) {
+export default function ToysList({
+  setSelectedToy,
+  handleOpenModal,
+  user,
+  isAdmin,
+  setUser
+}) {
   const [toys, setToys] = useState([])
+  const [cart, setCart] = useState([])
 
 
   useEffect(() => {
@@ -40,6 +48,16 @@ export default function ToysList({ setSelectedToy, handleOpenModal, user, isAdmi
 
   }
 
+  async function onAddToCart(id) {
+    const userConnected = JSON.parse(user);
+    const toy = toys.find((currToy) => currToy._id === id)
+    const updatedCart = [...cart, toy]
+    setCart(updatedCart);
+    const updatedUser = { ...userConnected, cart: updatedCart }
+    await updateUser(userConnected._id, updatedUser);
+    //  await updateUser(userConnected._id, updatedUser)
+  }
+
 
 
   return (
@@ -51,9 +69,12 @@ export default function ToysList({ setSelectedToy, handleOpenModal, user, isAdmi
             <div className='grid justify-items-center'>
               <h2 className='text-2xl font-bold text-blue-700'>{toy.title}</h2>
               <p className='font-bold text-blue-700'>${toy.price}</p>
-              <button
+              {!isAdmin && <button
+                onClick={() => onAddToCart(toy._id)}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
-                <i className="fa-solid fa-cart-shopping"></i></button>
+                <i className="fa-solid fa-cart-shopping"></i>
+              </button>
+              }
               {user && isAdmin && <div className='flex gap-2 mt-2'>
                 <button
                   onClick={() => onEditToy(toy._id)}
