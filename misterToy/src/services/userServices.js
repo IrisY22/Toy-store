@@ -12,6 +12,7 @@ export const login = async (userData) => {
 
 export const updateUser = async (userId, userData) => {
   try {
+    console.log(userData);
     const response = await put(`/api/users/${userId}`, userData);
     localStorage.setItem('user', JSON.stringify(response));
     return response;

@@ -23,6 +23,9 @@ export default function ToyIndex() {
       const userConnected = JSON.parse(user);
       setIsAdmin(userConnected.isAdmin)
       setIsLogin('Logout')
+    } else {
+      setIsLogin('Login')
+      setIsAdmin(false)
     }
   }, [user])
 
@@ -61,9 +64,10 @@ export default function ToyIndex() {
 
   function handleOpenLoginModal() {
     if (user) {
-      setIsLogin('Login')
       localStorage.clear();
+      setUser(null)
     } else {
+      setIsLogin('Login')
       setOpenLogin(true)
     }
   }
@@ -73,13 +77,17 @@ export default function ToyIndex() {
   }
 
   function handleNavigateToCart() {
-    navigate('/cart');
+    navigate('/cart', {
+      state: {
+        user: user
+      }
+    });
   }
   return (
     <>
       <div className='flex justify-end m-8'>
         <button onClick={() => handleOpenLoginModal()}>{isLogin}</button>
-        {openLogin && <Login onClose={handleCloseModal} />}
+        {openLogin && <Login onClose={handleCloseModal} setUser={setUser} />}
         <div>
         </div>
         <div className='flex justify-end m-8'>

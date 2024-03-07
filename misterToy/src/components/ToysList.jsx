@@ -17,6 +17,11 @@ export default function ToysList({
 
   useEffect(() => {
     fetchToys();
+    if (user) {
+      const userConnected = JSON.parse(user);
+      setCart(userConnected.cart)
+    }
+
   }, [])
 
   async function fetchToys() {
@@ -48,16 +53,22 @@ export default function ToysList({
 
   }
 
-  async function onAddToCart(id) {
-    const userConnected = JSON.parse(user);
-    const toy = toys.find((currToy) => currToy._id === id)
-    const updatedCart = [...cart, toy]
-    setCart(updatedCart);
-    const updatedUser = { ...userConnected, cart: updatedCart }
-    await updateUser(userConnected._id, updatedUser);
-    //  await updateUser(userConnected._id, updatedUser)
-  }
 
+  const onAddToCart = async (id) => {
+    const userConnected = JSON.parse(user);
+    const toy = toys.find((currToy) => currToy._id === id);
+
+    const updatedCart = [...cart, toy];
+    setCart(updatedCart);
+
+    const updatedUser = {
+      ...userConnected,
+      cart: updatedCart,
+    };
+
+    await updateUser(userConnected._id, updatedUser);
+    setUser(JSON.stringify(updatedUser));
+  };
 
 
   return (

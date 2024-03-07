@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { login } from "../services/userServices"
 
-export default function Login({ onClose }) {
+export default function Login({ onClose, setUser }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -13,7 +13,9 @@ export default function Login({ onClose }) {
     }
 
     const loggedUser = await login(user)
-    localStorage.setItem('user', JSON.stringify(loggedUser));
+    const userConnected = JSON.stringify(loggedUser)
+    localStorage.setItem('user', userConnected);
+    setUser(userConnected)
     onClose();
   }
 
