@@ -1,11 +1,13 @@
 
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
+
+import { create, update } from '../services/toyServices';
 import ToysList from "./ToysList";
 import AddNewToy from './AddNewToy';
 import Login from './Login';
-import { create, update } from '../services/toyServices';
+
 export default function ToyIndex() {
   const navigate = useNavigate();
 
