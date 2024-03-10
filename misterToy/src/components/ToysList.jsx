@@ -54,18 +54,39 @@ export default function ToysList({
   }
 
 
+
   const onAddToCart = async (id) => {
     const userConnected = JSON.parse(user);
-    const toy = toys.find((currToy) => currToy._id === id);
+    const item = userConnected.cart.find((currItem) => currItem.toy._id === id)
+    let updatedUser
+    if (item) {
+      item.quantity = item.quantity + 1;
+      const updatedCart = userConnected.cart.map((currItem) => {
+        if (currItem.toy._id === id) {
+          return item
+        }
+        return currItem
+      })
+      setCart(updatedCart)
+      updatedUser = {
+        ...userConnected,
+        cart: updatedCart,
+      };
+    }
+    else {
+      const toy = toys.find((currToy) => currToy._id === id);
+      const itemToAdd = {
+        toy,
+        quantity: 1
+      }
+      const updatedCart = [...userConnected.cart, itemToAdd]
+      setCart(updatedCart)
+      updatedUser = {
+        ...userConnected,
+        cart: updatedCart
+      }
 
-    const updatedCart = [...cart, toy];
-    setCart(updatedCart);
-
-    const updatedUser = {
-      ...userConnected,
-      cart: updatedCart,
-    };
-
+    }
     await updateUser(userConnected._id, updatedUser);
     setUser(JSON.stringify(updatedUser));
   };
