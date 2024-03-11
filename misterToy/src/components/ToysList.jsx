@@ -29,7 +29,7 @@ export default function ToysList({
       const toysData = await getToys();
       setToys(toysData);
     } catch (err) {
-      console.error('Failed to fetch toys:', error.message);
+      console.error('Failed to fetch toys:', err.message);
     }
   }
 
@@ -91,7 +91,7 @@ export default function ToysList({
     setUser(JSON.stringify(updatedUser));
   };
 
-
+  if (!user) return <div>Please login...</div>
   return (
     <ul className='grid grid-cols-2 gap-y-4 justify-items-center md:grid-cols-3 gap-2 xl:grid-cols-6'>
       {
